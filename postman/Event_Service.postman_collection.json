@@ -1,0 +1,641 @@
+{
+	"info": {
+		"_postman_id": "event-service-collection",
+		"name": "Event Service API",
+		"description": "Collection for testing Event Service API endpoints including notifications",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Endpoints",
+			"item": [
+				{
+					"name": "Create Event (DRAFT)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.environment.set('event_id', pm.response.json().id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Concert in Buenos Aires\",\n  \"startAt\": \"2025-12-15T20:00:00.000Z\",\n  \"endAt\": \"2025-12-15T23:00:00.000Z\",\n  \"location\": \"Buenos Aires\",\n  \"status\": \"DRAFT\",\n  \"internalNotes\": \"VIP list pending\",\n  \"createdBy\": \"admin@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "Creates a new event with DRAFT status. This triggers a 'New event created' notification."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Event (PUBLISHED)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.environment.set('published_event_id', pm.response.json().id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Festival de Música\",\n  \"startAt\": \"2025-12-20T18:00:00.000Z\",\n  \"endAt\": \"2025-12-20T22:00:00.000Z\",\n  \"location\": \"São Paulo\",\n  \"status\": \"PUBLISHED\",\n  \"internalNotes\": \"Soundcheck at 16:00\",\n  \"createdBy\": \"organizer@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "Creates a new event with PUBLISHED status. This triggers a 'New event created' notification."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event - Publish (DRAFT → PUBLISHED)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events/{{event_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{event_id}}"
+							]
+						},
+						"description": "Updates event status from DRAFT to PUBLISHED. This triggers an 'Event published' notification. Check console/logs for notification."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event - Cancel",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"CANCELLED\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events/{{published_event_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{published_event_id}}"
+							]
+						},
+						"description": "Cancels an event. This triggers an 'Event cancelled' notification. Check console/logs for notification."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event - Internal Notes",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"internalNotes\": \"Updated notes: All VIPs confirmed\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events/{{event_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{event_id}}"
+							]
+						},
+						"description": "Updates internal notes only. This does NOT trigger any notification."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Events",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/events",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "Gets all events (includes private fields). Requires authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Events - Filter by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/events?dateFrom=2025-12-01&dateTo=2025-12-31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "dateFrom",
+									"value": "2025-12-01"
+								},
+								{
+									"key": "dateTo",
+									"value": "2025-12-31"
+								}
+							]
+						},
+						"description": "Filters events by date range."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Events - Filter by Locations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/events?locations=Buenos Aires,São Paulo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "locations",
+									"value": "Buenos Aires,São Paulo"
+								}
+							]
+						},
+						"description": "Filters events by multiple locations (case-insensitive contains)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Events - Filter by Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/events?status=PUBLISHED",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PUBLISHED"
+								}
+							]
+						},
+						"description": "Filters events by status."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Events - Pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/events?page=1&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Gets events with pagination."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Public Endpoints",
+			"item": [
+				{
+					"name": "Get Public Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/public/events",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"events"
+							]
+						},
+						"description": "Gets only PUBLISHED and CANCELLED events (excludes private fields). No authentication required."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Public Events - Filter by Location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/public/events?locations=Paulo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"events"
+							],
+							"query": [
+								{
+									"key": "locations",
+									"value": "Paulo"
+								}
+							]
+						},
+						"description": "Filters public events by location. Note: Only PUBLISHED/CANCELLED events are returned."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Event Summary (SSE)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/public/events/{{published_event_id}}/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"events",
+								"{{published_event_id}}",
+								"summary"
+							]
+						},
+						"description": "Streams AI-generated event summary using Server-Sent Events (SSE). Check X-Summary-Cache header for HIT/MISS."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification Testing Flow",
+			"item": [
+				{
+					"name": "1. Create DRAFT Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const event = pm.response.json();",
+									"    pm.environment.set('notification_test_event_id', event.id);",
+									"    console.log('✅ Event created. Check server logs for: [NOTIFICATION] New event created');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Test Notification Event\",\n  \"startAt\": \"2025-12-25T10:00:00.000Z\",\n  \"endAt\": \"2025-12-25T14:00:00.000Z\",\n  \"location\": \"Test Location\",\n  \"status\": \"DRAFT\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "Step 1: Create a DRAFT event. This should trigger 'New event created' notification. Check server console/logs."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Publish Event (DRAFT → PUBLISHED)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    console.log('✅ Event published. Check server logs for: [NOTIFICATION] Event published');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events/{{notification_test_event_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{notification_test_event_id}}"
+							]
+						},
+						"description": "Step 2: Publish the event. This should trigger 'Event published' notification. Check server console/logs."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Cancel Event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    console.log('✅ Event cancelled. Check server logs for: [NOTIFICATION] Event cancelled');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"CANCELLED\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/events/{{notification_test_event_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"{{notification_test_event_id}}"
+							]
+						},
+						"description": "Step 3: Cancel the event. This should trigger 'Event cancelled' notification. Check server console/logs."
+					},
+					"response": []
+				}
+			],
+			"description": "Complete flow to test all three notification types. Run these requests in order and check server console/logs for notifications."
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "admin-token-123",
+			"type": "string"
+		},
+		{
+			"key": "event_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "published_event_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "notification_test_event_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+
