@@ -62,12 +62,12 @@ The summary should be engaging, mention key details, and include a call to actio
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json() as { error?: { message?: string } };
       throw new Error(`OpenAI API error: ${error.error?.message || 'Unknown error'}`);
     }
 
-    const data = await response.json();
-    return data.choices[0]?.message?.content?.trim() || '';
+    const data = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
+    return data.choices?.[0]?.message?.content?.trim() || '';
   }
 
   async *streamSummary(event: PublicEvent): AsyncGenerator<string> {
@@ -118,7 +118,7 @@ The summary should be engaging, mention key details, and include a call to actio
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json() as { error?: { message?: string } };
       throw new Error(`OpenAI API error: ${error.error?.message || 'Unknown error'}`);
     }
 

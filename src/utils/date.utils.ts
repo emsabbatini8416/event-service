@@ -9,8 +9,25 @@ export function isUpcoming(startAt: string): boolean {
 }
 
 export function isValidISODate(dateString: string): boolean {
+  // Check if it's a valid date
   const date = new Date(dateString);
-  return !isNaN(date.getTime()) && dateString === date.toISOString();
+  if (isNaN(date.getTime())) {
+    return false;
+  }
+  
+  // Check if the string matches ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ or YYYY-MM-DDTHH:mm:ssZ)
+  const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
+  if (!iso8601Regex.test(dateString)) {
+    return false;
+  }
+  
+  // Verify the date string represents the same moment as the parsed date
+  // Compare timestamps to handle milliseconds differences
+  const inputDate = new Date(dateString);
+  const parsedISO = date.toISOString();
+  const parsedDate = new Date(parsedISO);
+  
+  return inputDate.getTime() === parsedDate.getTime();
 }
 
 export function isDateInRange(dateString: string, from?: string, to?: string): boolean {

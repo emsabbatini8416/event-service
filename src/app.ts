@@ -18,7 +18,7 @@ export function createApp(): Express {
 
   app.use(requestIdMiddleware);
 
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((req: Request, _res: Response, next: NextFunction) => {
     logger.info(`${req.method} ${req.path}`, {
       method: req.method,
       path: req.path,

@@ -17,8 +17,8 @@ describe('Event Service E2E Tests', () => {
         .post('/api/events')
         .send({
           title: 'Test Event',
-          startAt: '2025-12-01T10:00:00Z',
-          endAt: '2025-12-01T12:00:00Z',
+          startAt: '2026-12-01T10:00:00Z',
+          endAt: '2026-12-01T12:00:00Z',
           location: 'Test Location'
         });
 
@@ -44,8 +44,8 @@ describe('Event Service E2E Tests', () => {
     it('should create an event with valid data', async () => {
       const eventData = {
         title: 'Go Live',
-        startAt: '2025-09-01T10:00:00Z',
-        endAt: '2025-09-01T12:00:00Z',
+        startAt: '2026-09-01T10:00:00Z',
+        endAt: '2026-09-01T12:00:00Z',
         location: 'São Paulo',
         status: 'PUBLISHED',
         internalNotes: 'VIP list pending',
@@ -92,8 +92,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'a'.repeat(201),
-          startAt: '2025-12-01T10:00:00Z',
-          endAt: '2025-12-01T12:00:00Z',
+          startAt: '2026-12-01T10:00:00Z',
+          endAt: '2026-12-01T12:00:00Z',
           location: 'Test Location'
         });
 
@@ -107,8 +107,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Test Event',
-          startAt: '2025-12-01T12:00:00Z',
-          endAt: '2025-12-01T10:00:00Z',
+          startAt: '2026-12-01T12:00:00Z',
+          endAt: '2026-12-01T10:00:00Z',
           location: 'Test Location'
         });
 
@@ -163,8 +163,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Go Live',
-          startAt: '2025-09-01T10:00:00Z',
-          endAt: '2025-09-01T12:00:00Z',
+          startAt: '2026-09-01T10:00:00Z',
+          endAt: '2026-09-01T12:00:00Z',
           location: 'São Paulo',
           status: 'PUBLISHED',
           internalNotes: 'VIP list pending',
@@ -185,8 +185,8 @@ describe('Event Service E2E Tests', () => {
       // Check public fields are present
       expect(publicEvent).toHaveProperty('id');
       expect(publicEvent).toHaveProperty('title', 'Go Live');
-      expect(publicEvent).toHaveProperty('startAt', '2025-09-01T10:00:00Z');
-      expect(publicEvent).toHaveProperty('endAt', '2025-09-01T12:00:00Z');
+      expect(publicEvent).toHaveProperty('startAt', '2026-09-01T10:00:00Z');
+      expect(publicEvent).toHaveProperty('endAt', '2026-09-01T12:00:00Z');
       expect(publicEvent).toHaveProperty('location', 'São Paulo');
       expect(publicEvent).toHaveProperty('status', 'PUBLISHED');
       expect(publicEvent).toHaveProperty('isUpcoming', true);
@@ -206,8 +206,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Lifecycle Event',
-          startAt: '2025-10-01T10:00:00Z',
-          endAt: '2025-10-01T12:00:00Z',
+          startAt: '2026-10-01T10:00:00Z',
+          endAt: '2026-10-01T12:00:00Z',
           location: 'Test Location',
           status: 'DRAFT'
         });
@@ -255,8 +255,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Test Event',
-          startAt: '2025-10-01T10:00:00Z',
-          endAt: '2025-10-01T12:00:00Z',
+          startAt: '2026-10-01T10:00:00Z',
+          endAt: '2026-10-01T12:00:00Z',
           location: 'Test Location',
           status: 'PUBLISHED'
         });
@@ -280,8 +280,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Test Event',
-          startAt: '2025-10-01T10:00:00Z',
-          endAt: '2025-10-01T12:00:00Z',
+          startAt: '2026-10-01T10:00:00Z',
+          endAt: '2026-10-01T12:00:00Z',
           location: 'Test Location',
           status: 'CANCELLED'
         });
@@ -305,22 +305,22 @@ describe('Event Service E2E Tests', () => {
       const events = [
         {
           title: 'Event 1',
-          startAt: '2025-06-01T10:00:00Z',
-          endAt: '2025-06-01T12:00:00Z',
+          startAt: '2026-06-01T10:00:00Z',
+          endAt: '2026-06-01T12:00:00Z',
           location: 'New York',
           status: 'PUBLISHED'
         },
         {
           title: 'Event 2',
-          startAt: '2025-07-01T10:00:00Z',
-          endAt: '2025-07-01T12:00:00Z',
+          startAt: '2026-07-01T10:00:00Z',
+          endAt: '2026-07-01T12:00:00Z',
           location: 'Los Angeles',
           status: 'PUBLISHED'
         },
         {
           title: 'Event 3',
-          startAt: '2025-08-01T10:00:00Z',
-          endAt: '2025-08-01T12:00:00Z',
+          startAt: '2026-08-01T10:00:00Z',
+          endAt: '2026-08-01T12:00:00Z',
           location: 'New York',
           status: 'DRAFT'
         }
@@ -336,7 +336,7 @@ describe('Event Service E2E Tests', () => {
 
     it('should filter by date range', async () => {
       const response = await request(app)
-        .get('/api/events?dateFrom=2025-06-01&dateTo=2025-06-30')
+        .get('/api/events?dateFrom=2026-06-01&dateTo=2026-06-30')
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(200);
@@ -395,8 +395,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Summary Test Event',
-          startAt: '2025-09-01T10:00:00Z',
-          endAt: '2025-09-01T12:00:00Z',
+          startAt: '2026-09-01T10:00:00Z',
+          endAt: '2026-09-01T12:00:00Z',
           location: 'Test Location',
           status: 'PUBLISHED'
         });
@@ -427,8 +427,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Draft Event',
-          startAt: '2025-09-01T10:00:00Z',
-          endAt: '2025-09-01T12:00:00Z',
+          startAt: '2026-09-01T10:00:00Z',
+          endAt: '2026-09-01T12:00:00Z',
           location: 'Test Location',
           status: 'DRAFT'
         });
@@ -451,8 +451,8 @@ describe('Event Service E2E Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Update Test',
-          startAt: '2025-09-01T10:00:00Z',
-          endAt: '2025-09-01T12:00:00Z',
+          startAt: '2026-09-01T10:00:00Z',
+          endAt: '2026-09-01T12:00:00Z',
           location: 'Test Location',
           status: 'DRAFT',
           internalNotes: 'Initial notes'
